@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "v4l2CapPicTool.h"
+#include "../utility/timecost.h"
 
 int main(int argc, char const *argv[])
 {
@@ -9,8 +10,15 @@ int main(int argc, char const *argv[])
     while (1)
     {
         usleep(100000);
-        vt.capture();
-        vt.save("./test.jpg");
+        {
+            timecost tmp("capture");
+            vt.capture();
+        }
+            
+        {
+            timecost tmp("save");
+            vt.save("./test.jpg"); 
+        }
     }
     return 0;
 }
