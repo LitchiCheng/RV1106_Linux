@@ -2,9 +2,16 @@
 Linux test for RV1106 dev board
 
 ## v4l2
-> class v4l2CapPicTool is a tool for capturing picture;
+> 1. class v4l2CapPicTool is a tool for capturing picture;
 
-`arm-linux-gnueabihf-g++ v4l2CapPicTool.cpp captureJpgApp.cpp -o captureJpgApp`
+### compile
+```
+cd v4l2
+mkdir build
+cd build
+cmake ..
+make
+```
 
 ### time cost 
 ```

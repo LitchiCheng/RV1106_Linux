@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "v4l2CapPicTool.h"
-#include "../utility/timecost.h"
+#include "timecost.h"
 
 int main(int argc, char const *argv[])
 {
