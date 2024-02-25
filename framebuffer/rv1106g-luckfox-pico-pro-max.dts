@@ -1,0 +1,255 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright (c) 2022 Rockchip Electronics Co., Ltd.
+ */
+
+/dts-v1/;
+
+#include "rv1106.dtsi"
+#include "rv1106-evb.dtsi"
+#include "rv1106-luckfox-pico-pro-max-ipc.dtsi"
+
+/ {
+	model = "Luckfox Pico Max";
+	compatible = "rockchip,rv1103g-38x38-ipc-v10", "rockchip,rv1106";
+
+	/*LCD DC*/
+	gpio2pa2:gpio2pa2 {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&gpio2_pa2>;
+		regulator-name = "gpio2_pa2";
+		regulator-always-on;
+	};
+
+	/*LCD RESET*/
+	gpio2pa3:gpio2pa3 {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&gpio2_pa3>;
+		regulator-name = "gpio2_pa3";
+		regulator-always-on;
+	};
+};
+
+&pinctrl {
+	/*LCD DC*/
+	gpio2-pa2 {
+		gpio2_pa2:gpio2-pa2 {
+			rockchip,pins = <2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+	};
+
+	/*LCD RESET*/
+	gpio2-pa3 {
+		gpio2_pa3:gpio2-pa3 {
+			rockchip,pins =	<2 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+	};
+};
+
+/**********FLASH**********/
+&sfc {
+	status = "okay";
+	flash@0 {
+		compatible = "spi-nand";
+		reg = <0>;
+		spi-max-frequency = <75000000>;
+		spi-rx-bus-width = <4>;
+		spi-tx-bus-width = <1>;
+	};
+	
+};
+
+/**********SDMMC**********/
+&sdmmc {
+	max-frequency = <50000000>;
+	no-sdio;
+	no-mmc;
+	bus-width = <4>;
+	cap-mmc-highspeed;
+	cap-sd-highspeed;
+	disable-wp;
+	pinctrl-names = "default";
+	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_det &sdmmc0_bus4>;
+	status = "okay";
+};
+
+/**********SDIO**********/
+// &sdio {
+// 	max-frequency = <50000000>;
+// 	no-sdio;
+// 	no-mmc;
+// 	bus-width = <4>;
+// 	cap-mmc-highspeed;
+// 	cap-sd-highspeed;
+// 	disable-wp;
+// 	pinctrl-names = "default";
+// 	pinctrl-0 = <&sdmmc1m0_cmd &sdmmc1m0_clk &sdmmc1m0_bus4 &clk_32k>;
+// 	status = "okay";
+// };
+
+/**********ETH**********/
+&gmac {
+	status = "okay";
+};
+
+/**********USB**********/
+&usbdrd_dwc3 {
+	status = "okay";
+	dr_mode = "host";
+};
+
+/**********I2C**********/
+// &i2c1 {
+// 	status = "okay";
+// 	pinctrl-0 = <&i2c1m1_xfer>;
+// 	clock-frequency = <100000>;
+// };
+&i2c3 {
+	status = "okay";
+	pinctrl-0 = <&i2c3m1_xfer>;
+	clock-frequency = <100000>;
+};
+
+// /**********SPI**********/
+&spi0 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&spi0m0_pins &spi0m0_cs0>;
+	//cs-gpios = <&gpio1 RK_PC0 1>;
+	// cs-gpios = <&gpio1 26 1>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+	//spidev@0 {
+	//	compatible = "rockchip,spidev";
+	//	spi-max-frequency = <50000000>;
+	//	reg = <0>;
+	//};
+
+	st7735r@0{
+		compatible = "sitronix,st7735r";
+		reg = <0>;
+		status = "okay";
+		spi-max-frequency = <48000000>;
+		dc = <&gpio2 RK_PA2 1>;
+		reset = <&gpio2 RK_PA3 1>;
+		rotation = <90>;
+		spi-cpol;
+		spi-cpha;
+		fps = <30>;
+		buswidth = <8>;
+		rgb;
+	};
+
+};
+
+
+
+/**********UART**********/
+
+// &uart0 {
+// 	status = "okay";
+// 	pinctrl-names = "default";
+// 	pinctrl-0 = <&uart0m1_xfer>;
+// };
+
+// &uart1 {
+// 	status = "okay";
+// 	pinctrl-names = "default";
+// 	pinctrl-0 = <&uart1m1_xfer>;
+// };
+
+&uart3 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart3m1_xfer>;
+};
+&uart4 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart4m1_xfer>;
+};
+
+
+// /**********PWM**********/
+
+// &pwm0 {
+// 	status = "okay";
+// 	pinctrl-names = "active";
+// 	pinctrl-0 = <&pwm0m0_pins>;
+// 	// pinctrl-0 = <&pwm0m1_pins>;
+// };
+// &pwm1 {
+// 	status = "okay";
+// 	pinctrl-names = "active";
+// 	pinctrl-0 = <&pwm1m0_pins>;
+// 	// pinctrl-0 = <&pwm1m1_pins>;
+// };
+
+//&pwm2 {
+//	status = "okay";
+//	pinctrl-names = "active";
+//	pinctrl-0 = <&pwm2m2_pins>;
+//};
+//&pwm3 {
+//	status = "okay";
+//	pinctrl-names = "active";
+//	pinctrl-0 = <&pwm3m2_pins>;
+//};
+//&pwm4 {
+//	status = "okay";
+//	pinctrl-names = "active";
+//	pinctrl-0 = <&pwm4m2_pins>;
+//};
+&pwm5 {
+	status = "okay";
+	pinctrl-names = "active";
+	pinctrl-0 = <&pwm5m1_pins>;
+	// pinctrl-0 = <&pwm5m2_pins>;
+};
+&pwm6 {
+	status = "okay";
+	pinctrl-names = "active";
+	pinctrl-0 = <&pwm6m1_pins>;
+	// pinctrl-0 = <&pwm6m2_pins>;
+};
+//&pwm7 {
+//	status = "okay";
+//	pinctrl-names = "active";
+//	pinctrl-0 = <&pwm7m2_pins>;
+//};
+//&pwm8 {
+//	status = "okay";
+//	pinctrl-names = "active";
+//	// pinctrl-0 = <&pwm8m1_pins>;
+//	pinctrl-0 = <&pwm8m0_pins>;
+//};
+//&pwm9 {
+//	status = "okay";
+//	pinctrl-names = "active";
+//	// pinctrl-0 = <&pwm9m1_pins>;
+//	pinctrl-0 = <&pwm9m0_pins>;
+//};
+
+&pwm10 {
+	status = "okay";
+	pinctrl-names = "active";
+	pinctrl-0 = <&pwm10m1_pins>;
+	// pinctrl-0 = <&pwm10m2_pins>;
+	// pinctrl-0 = <&pwm10m0_pins>;
+};
+&pwm11 {
+	status = "okay";
+	pinctrl-names = "active";
+	pinctrl-0 = <&pwm11m1_pins>;
+	// pinctrl-0 = <&pwm11m2_pins>;
+	// pinctrl-0 = <&pwm11m0_pins>;
+};
+
+
+&rtc {
+	status = "okay";
+};
+
+

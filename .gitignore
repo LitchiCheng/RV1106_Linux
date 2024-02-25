@@ -33,3 +33,6 @@
 
 v4l2/build/*
 
+yolov5/build/*
+
+framebuffer/st7735test
