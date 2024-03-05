@@ -28,6 +28,9 @@ public:
     int capture();
     int save(std::string path);
 
+    int picSize();
+    unsigned char* picBuffer();
+
 private:
     std::string _dev{"/dev/video0"};
     int _pic_width{1080};

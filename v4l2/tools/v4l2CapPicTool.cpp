@@ -121,3 +121,11 @@ int v4l2CapPicTool::save(std::string file_path){
 	fclose(fl);
     return 0;
 }
+
+int v4l2CapPicTool::picSize(){
+	return _buff.bytesused;
+}
+
+unsigned char* v4l2CapPicTool::picBuffer(){
+	return _buffer_datas;
+}
