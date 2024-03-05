@@ -26,6 +26,8 @@ typedef struct {
  */
 int read_image(const char* path, image_buffer_t* image);
 
+int read_image_frombuff(unsigned char* jpegBuf, unsigned long size, image_buffer_t* image);
+
 /**
  * @brief Write image file (support jpg/png)
  * 

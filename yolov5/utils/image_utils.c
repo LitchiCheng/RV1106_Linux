@@ -48,6 +48,82 @@ static int image_file_filter(const struct dirent *entry)
     return 0;
 }
 
+int read_image_frombuff(unsigned char* jpegBuf, unsigned long size, image_buffer_t* image){
+    int flags = 0;
+    int width, height;
+    int origin_width, origin_height;
+    unsigned char* imgBuf = NULL;
+    
+    unsigned short orientation = 1;
+    struct timeval tv1, tv2;
+
+    tjhandle handle = NULL;
+    int subsample, colorspace;
+    int padding = 1;
+    int ret = 0;
+
+    handle = tjInitDecompress();
+    ret = tjDecompressHeader3(handle, jpegBuf, size, &origin_width, &origin_height, &subsample, &colorspace);
+    if (ret < 0) {
+        printf("header file error, errorStr:%s, errorCode:%d\n", tjGetErrorStr(), tjGetErrorCode(handle));
+        return -1;
+    }
+
+    // 对图像做裁剪16对齐，利于后续rga操作
+    int crop_width = origin_width / 16 * 16;
+    int crop_height = origin_height / 16 * 16;
+
+    printf("origin size=%dx%d crop size=%dx%d\n", origin_width, origin_height, crop_width, crop_height);
+
+    // gettimeofday(&tv1, NULL);
+    ret = tjDecompressHeader3(handle, jpegBuf, size, &width, &height, &subsample, &colorspace);
+    if (ret < 0) {
+        printf("header file error, errorStr:%s, errorCode:%d\n", tjGetErrorStr(), tjGetErrorCode(handle));
+        return -1;
+    }
+    printf("input image: %d x %d, subsampling: %s, colorspace: %s, orientation: %d\n", 
+            width, height, subsampName[subsample], colorspaceName[colorspace], orientation);
+    int sw_out_size = width * height * 3;
+    unsigned char* sw_out_buf = image->virt_addr;
+    if (sw_out_buf == NULL) {
+        sw_out_buf = (unsigned char*)malloc(sw_out_size * sizeof(unsigned char));
+    }
+    if (sw_out_buf == NULL) {
+        printf("sw_out_buf is NULL\n");
+        goto out;
+    }
+
+    flags |= 0;
+
+    // 错误码为0时，表示警告，错误码为-1时表示错误
+    int pixelFormat = TJPF_RGB;
+    ret = tjDecompress2(handle, jpegBuf, size, sw_out_buf, width, 0, height, pixelFormat, flags);
+    // ret = tjDecompressToYUV2(handle, jpeg_buf, size, dst_buf, *width, padding, *height, flags);
+    if ((0 != tjGetErrorCode(handle)) && (ret < 0)) {
+        printf("error : decompress to yuv failed, errorStr:%s, errorCode:%d\n", tjGetErrorStr(),
+               tjGetErrorCode(handle));
+        goto out;
+    }
+    if ((0 == tjGetErrorCode(handle)) && (ret < 0)) {
+        printf("warning : errorStr:%s, errorCode:%d\n", tjGetErrorStr(), tjGetErrorCode(handle));
+    }
+    tjDestroy(handle);
+    // gettimeofday(&tv2, NULL);
+    // printf("decode time %ld ms\n", (tv2.tv_sec-tv1.tv_sec)*1000 + (tv2.tv_usec-tv1.tv_usec)/1000);
+
+    image->width = width;
+    image->height = height;
+    image->format = IMAGE_FORMAT_RGB888;
+    image->virt_addr = sw_out_buf;
+    image->size = sw_out_size;
+out:
+    if (jpegBuf) {
+        free(jpegBuf);
+    }
+    return 0;
+}
+
+
 static int read_image_jpeg(const char* path, image_buffer_t* image)
 {
     FILE* jpegFile = NULL;

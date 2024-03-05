@@ -29,6 +29,8 @@
     #include "dma_alloc.cpp"
 #endif
 
+#include "../v4l2/tools/v4l2CapPicTool.h"
+
 /*-------------------------------------------
                   Main Function
 -------------------------------------------*/
@@ -36,12 +38,17 @@ int main(int argc, char **argv)
 {
     if (argc != 3)
     {
-        printf("%s <model_path> <image_path>\n", argv[0]);
+        printf("%s <model_path> <image_path> <camera_path>\n", argv[0]);
         return -1;
     }
 
     const char *model_path = argv[1];
     const char *image_path = argv[2];
+    // const char *camera_path = argv[3];
+
+    std::string camera_path = std::string(argv[3]);
+    v4l2CapPicTool vt(camera_path, 1080, 960, "jpg");
+    vt.init();
 
     int ret;
     rknn_app_context_t rknn_app_ctx;
@@ -58,7 +65,8 @@ int main(int argc, char **argv)
 
     image_buffer_t src_image;
     memset(&src_image, 0, sizeof(image_buffer_t));
-    ret = read_image(image_path, &src_image);
+    // ret = read_image(image_path, &src_image);
+    ret = read_image_frombuff(vt.picBuffer(), vt.picSize(), &src_image);
 
 #if defined(RV1106_1103) 
     //RV1106 rga requires that input and output bufs are memory allocated by dma

@@ -31,6 +31,7 @@ file(GLOB SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cc)
 add_executable(${PROJECT_NAME}
     main.cc
     postprocess.cc
+    ../v4l2/tools/v4l2CapPicTool.cpp
     ${rknpu2_yolov5_file}
 )
 
@@ -50,6 +51,7 @@ target_link_libraries(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${LIBRKNNRT_INCLUDES}
+    ../v4l2/tools
     ./3rdparty/rknpu2/include
 )
 
