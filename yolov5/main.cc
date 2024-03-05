@@ -36,7 +36,7 @@
 -------------------------------------------*/
 int main(int argc, char **argv)
 {
-    if (argc != 3)
+    if (argc != 4)
     {
         printf("%s <model_path> <image_path> <camera_path>\n", argv[0]);
         return -1;

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 set (CMAKE_C_COMPILER "/mnt/d/luckfox-pico/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/bin/arm-rockchip830-linux-uclibcgnueabihf-gcc")
 set (CMAKE_CXX_COMPILER "/mnt/d/luckfox-pico/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/bin/arm-rockchip830-linux-uclibcgnueabihf-g++")
 
-project(rknn_yolov5_demo)
+project(rknn_yolov5_realtime)
 
 file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/output)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/output)
