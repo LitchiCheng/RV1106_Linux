@@ -34,5 +34,6 @@
 v4l2/build/*
 
 yolov5/build/*
+yolov5/output/*
 
 framebuffer/st7735test

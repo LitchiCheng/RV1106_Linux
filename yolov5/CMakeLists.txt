@@ -5,6 +5,11 @@ set (CMAKE_CXX_COMPILER "/mnt/d/luckfox-pico/tools/linux/toolchain/arm-rockchip8
 
 project(rknn_yolov5_demo)
 
+file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/output)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/output)
+
+set(OUTPUTPATH ${CMAKE_CURRENT_SOURCE_DIR}/output)
+
 if (ENABLE_ASAN)
 	message(STATUS "BUILD WITH ADDRESS SANITIZER")
 	set (CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
@@ -19,8 +24,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/allocator/dma)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/ 3rdparty.out)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/utils/ utils.out)
-
-set(CMAKE_INSTALL_RPATH "$ORIGIN/lib")
 
 file(GLOB SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cc)
 
@@ -50,8 +53,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ./3rdparty/rknpu2/include
 )
 
-install(TARGETS ${PROJECT_NAME} DESTINATION .)
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../model/bus.jpg DESTINATION ./model)
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../model/coco_80_labels_list.txt DESTINATION ./model)
-file(GLOB RKNN_FILES "${CMAKE_CURRENT_SOURCE_DIR}/../model/*.rknn")
-install(FILES ${RKNN_FILES} DESTINATION model)
+install(TARGETS ${PROJECT_NAME} DESTINATION ${OUTPUTPATH})
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/model/bus.jpg DESTINATION ${OUTPUTPATH}/model)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/model/coco_80_labels_list.txt DESTINATION ${OUTPUTPATH}/model)
+file(GLOB RKNN_FILES "${CMAKE_CURRENT_SOURCE_DIR}/model/*.rknn")
+install(FILES ${RKNN_FILES} DESTINATION ${OUTPUTPATH}/model)

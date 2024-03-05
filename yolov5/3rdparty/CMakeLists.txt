@@ -2,17 +2,10 @@ cmake_minimum_required(VERSION 3.15)
 
 project(rknn_model_zoo_3rdparty_libs)
 
-if (CMAKE_SYSTEM_NAME STREQUAL "Android")
-    set (TARGET_LIB_ARCH ${CMAKE_ANDROID_ARCH_ABI})
-else()
-    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-        set (TARGET_LIB_ARCH aarch64)
-    else()
-        set (TARGET_LIB_ARCH armhf)
-    endif()
-    if (CMAKE_C_COMPILER MATCHES "uclibc")
-        set (TARGET_LIB_ARCH ${TARGET_LIB_ARCH}_uclibc)
-    endif()
+set(TARGET_LIB_ARCH armhf)
+
+if (CMAKE_C_COMPILER MATCHES "uclibc")
+    set (TARGET_LIB_ARCH ${TARGET_LIB_ARCH}_uclibc)
 endif()
 
 # stb image
@@ -25,23 +18,16 @@ set(LIBJPEG ${JPEG_PATH}/${CMAKE_SYSTEM_NAME}/${TARGET_LIB_ARCH}/libturbojpeg.a 
 set(LIBJPEG_INCLUDES ${JPEG_PATH}/include PARENT_SCOPE)
 
 # rknn runtime
-if (TARGET_SOC STREQUAL "rk3588" OR TARGET_SOC STREQUAL "rk356x" OR TARGET_SOC STREQUAL "rv1106" OR TARGET_SOC STREQUAL "rv1103")
-    set(RKNN_PATH ${CMAKE_CURRENT_SOURCE_DIR}/rknpu2)
-    if (TARGET_SOC STREQUAL "rk3588" OR TARGET_SOC STREQUAL "rk356x")
-        set(LIBRKNNRT ${RKNN_PATH}/${CMAKE_SYSTEM_NAME}/${TARGET_LIB_ARCH}/librknnrt.so)
-    endif()
-    if (TARGET_SOC STREQUAL "rv1106" OR TARGET_SOC STREQUAL "rv1103")
-        set(LIBRKNNRT ${RKNN_PATH}/${CMAKE_SYSTEM_NAME}/armhf-uclibc/librknnmrt.so)
-    endif()
-    set(LIBRKNNRT_INCLUDES ${RKNN_PATH}/include PARENT_SCOPE)
-endif()
-install(PROGRAMS ${LIBRKNNRT} DESTINATION lib)
+set(RKNN_PATH ${CMAKE_CURRENT_SOURCE_DIR}/rknpu2)
+set(LIBRKNNRT ${RKNN_PATH}/${CMAKE_SYSTEM_NAME}/armhf-uclibc/librknnmrt.so)
+set(LIBRKNNRT_INCLUDES ${RKNN_PATH}/include PARENT_SCOPE)
+install(PROGRAMS ${LIBRKNNRT} DESTINATION ${OUTPUTPATH}/lib)
 set(LIBRKNNRT ${LIBRKNNRT} PARENT_SCOPE)
 
 # rga
 set(RGA_PATH ${CMAKE_CURRENT_SOURCE_DIR}/librga)
 set(LIBRGA ${RGA_PATH}/${CMAKE_SYSTEM_NAME}/${TARGET_LIB_ARCH}/librga.a PARENT_SCOPE)
 set(LIBRGA_INCLUDES ${RGA_PATH}/include PARENT_SCOPE)
-install(PROGRAMS ${RGA_PATH}/${CMAKE_SYSTEM_NAME}/${TARGET_LIB_ARCH}/librga.so DESTINATION lib)
+install(PROGRAMS ${RGA_PATH}/${CMAKE_SYSTEM_NAME}/${TARGET_LIB_ARCH}/librga.so DESTINATION ${OUTPUTPATH}/lib)
 
 
