@@ -7,7 +7,11 @@ v4l2CapPicTool::v4l2CapPicTool(std::string dev, int width,
         _pic_format = V4L2_PIX_FMT_MJPEG;
     }else if("yuyv" == pic_format){
         _pic_format = V4L2_PIX_FMT_YUYV;
-    }
+    }else if("uyvy" == pic_format){
+		_pic_format = V4L2_PIX_FMT_UYVY;
+	}else if("nv12" == pic_format){
+		_pic_format = V4L2_PIX_FMT_NV12;
+	}
 }
 
 v4l2CapPicTool::~v4l2CapPicTool(){
@@ -26,7 +30,7 @@ int v4l2CapPicTool::init(){
 	}
 
 	struct v4l2_format format;
-	format.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+	format.type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
 	format.fmt.pix.width = _pic_width;              
 	format.fmt.pix.height = _pic_height;            
 	format.fmt.pix.pixelformat = _pic_format;           
@@ -48,7 +52,7 @@ int v4l2CapPicTool::init(){
 	}
 
 	struct v4l2_requestbuffers reqbuf;
-	reqbuf.count = 1;                       
+	reqbuf.count = 2;                       
 	reqbuf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;  
 	reqbuf.memory = V4L2_MEMORY_MMAP;
 	ret = ioctl(_v4l2_fd, VIDIOC_REQBUFS, &reqbuf);
@@ -83,7 +87,7 @@ FAIL:
 
 int v4l2CapPicTool::capture(){
 	int ret;
-    int on = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    int on = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
     ret = ioctl(_v4l2_fd, VIDIOC_QBUF, &_buff);
 	if (-1 == ret){
 		_err_str = "VIDIOC_QBUF failed";

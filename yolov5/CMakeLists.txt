@@ -20,9 +20,9 @@ endif ()
 add_definitions(-DRV1106_1103)
 set(rknpu2_yolov5_file rknpu2/yolov5_rv1106_1103.cc)
 #dma
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/allocator/dma)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../sources/3rdparty/allocator/dma)
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/ 3rdparty.out)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../sources/3rdparty/ 3rdparty.out)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/utils/ utils.out)
 
 file(GLOB SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cc)
