@@ -91,3 +91,6 @@ rkrtsp/build/CMakeFiles/rkrtsp-test.dir/DependInfo.cmake
 rkrtsp/build/CMakeFiles/rkrtsp-test.dir/flags.make
 rkrtsp/build/CMakeFiles/rkrtsp-test.dir/link.txt
 rkrtsp/build/CMakeFiles/rkrtsp-test.dir/progress.make
+
+MNIST/build/*
+MNIST/rtsp_mnist_test/*

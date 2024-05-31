@@ -1,0 +1,11 @@
+prefix=/usr
+exec_prefix=/usr
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libdrm_rockchip
+Description: Userspace interface to rockchip kernel DRM services
+Version: 0.1
+Libs: -L${libdir} -ldrm_rockchip
+Cflags: -I${includedir} -I${includedir}/libdrm
+Requires.private: libdrm

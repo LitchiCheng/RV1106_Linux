@@ -102,3 +102,26 @@ CONFIG_FB_TFT_ST7735R=y
 `sudo ffmpeg -v 60 -i bad-apple-160x128-4.mp4 -pix_fmt rgb565le -f fbdev /dev/fb0`
 
 ![](doc/framebuffer-badapple.jpg)
+
+## MNIST
+
+### build
+```
+cd MNIST
+mkdri build
+cd build
+cmake ..
+make
+make install
+scp -r ../rtsp_mnist_test root@xxx.xxx.xxx.xxx:~
+```
+
+### run
+```
+killall rkipc
+cd rtsp_mnist_test
+./rtsp_mnist_test model/mnist.rknn
+```
+
+### rtsp
+`rtsp://192.168.31.139/live/0`
