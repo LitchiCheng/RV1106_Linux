@@ -144,11 +144,11 @@ int main(int argc, char *argv[]) {
 						//绿框，thickness为1
 						cv::rectangle(frame, rects[i], cv::Scalar(0, 255, 0), 1);
 						//红字，fontscale为1，thickness为1
-						cv::putText(frame, std::to_string(result.num), cv::Point(rects[i].x, rects[i].y - 10),
+						cv::putText(frame, std::to_string(result.num), cv::Point(rects[i].x, rects[i].y + 10),
 									cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 0, 0), 1);
-						//红字，fontscale为1，thickness为1
-						cv::putText(frame, std::to_string(result.probability), cv::Point(rects[i].x+ 30, rects[i].y - 10),
-									cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 0, 0), 1);
+						//蓝字，fontscale为1，thickness为1
+						cv::putText(frame, std::to_string(result.probability), cv::Point(rects[i].x+ 30, rects[i].y + 10),
+									cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 0, 255), 1);
 						detect_results.pop_back();
 					}
 				}

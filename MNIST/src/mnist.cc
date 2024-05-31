@@ -226,7 +226,7 @@ int inference_mnist_model(rknn_app_context_t* app_ctx, cv::Mat &frame, std::vect
     for(int i = 0; i < DETECT_NUM_SIZE; i ++)
         out_fp32[i] = deqnt_affine_to_f32(output[i],zp,scale);
 
-    //归一化，概率为1
+    //归一化
     float sum = 0;
     for(int i = 0; i < DETECT_NUM_SIZE; i++)
         sum += out_fp32[i] * out_fp32[i];
@@ -263,15 +263,15 @@ std::vector<cv::Rect> find_contour(const cv::Mat &image, std::vector<cv::Mat>& s
 	// 腐蚀
 	cv::erode(edged, edged, kernel);
 	// 二值化
-	cv::threshold(edged, edged, 128, 0, cv::THRESH_TOZERO);
+	cv::threshold(edged, edged, 127, 0, cv::THRESH_TOZERO);
 	// 用来存找到的轮廓
     std::vector<std::vector<cv::Point>> contours;
     cv::findContours(edged, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 	std::vector<cv::Rect> borders;
 	for(auto contour: contours){
 		cv::Rect bounding_box = cv::boundingRect(contour);
-		//当前矩形框面积大于50才使用
-		if (cv::contourArea(contour) > 50) {
+		//当前矩形框大于30才使用
+		if (cv::contourArea(contour) > 30) {
 			//扩大矩形框，以防数字被截断
 			bounding_box.x = std::max(0, bounding_box.x - 10);
 			bounding_box.y = std::max(0, bounding_box.y - 10);
@@ -282,9 +282,9 @@ std::vector<cv::Rect> find_contour(const cv::Mat &image, std::vector<cv::Mat>& s
             cv::Mat sub = edged(bounding_box);
             // 扩大数字轮廓
             cv::threshold(sub, sub, 0, 255, cv::THRESH_BINARY | cv::THRESH_OTSU);
-            // 再次二值化
-            cv::threshold(sub, sub, 127, 255, cv::THRESH_BINARY_INV);
-            // 将图片大小调整为28
+            // // 再次二值化
+            // cv::threshold(sub, sub, 127, 255, cv::THRESH_BINARY_INV);
+            // // 将图片大小调整为28
 	        cv::resize(sub, postsub, cv::Size(28, 28), 0, 0, cv::INTER_AREA);
             sub_pics.push_back(postsub);
 		}
