@@ -125,3 +125,5 @@ cd rtsp_mnist_test
 
 ### rtsp
 `rtsp://192.168.31.139/live/0`
+
+![](doc/MNIST-rtsp.jpg)
